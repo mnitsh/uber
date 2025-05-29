@@ -4,8 +4,8 @@ import bcrypt from "bcrypt";
 
 const userSchema = new Schema(
     {
-        fullname: {
-            frstName: {
+        fullName: {
+            firstName: {
                 type: String,
                 required: [true, "FirstName is required"],
                 minlength: [2, "FirstName must be at least 2 character long"]
@@ -57,4 +57,4 @@ userSchema.methods.generateToken = function () {
 };
 
 
-export const User = mongoose.model("User", userSchema)
+export const User = mongoose.model("User", userSchema);

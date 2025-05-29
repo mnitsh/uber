@@ -5,9 +5,6 @@ import connectDB from "./db/dbConnect.js"
 const PORT = process.env.PORT || 3000;
 const mongoose_uri = process.env.MONGODB_URI;
 
-console.log(mongoose_uri);
-
-
 const server = new createServer(app);
 
 connectDB(mongoose_uri)

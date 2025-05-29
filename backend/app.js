@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-dotenv.config({path:".env"});
+dotenv.config({ path: ".env" });
 
 import express from "express";
 import cors from "cors";
@@ -7,12 +7,11 @@ import cors from "cors";
 const app = express();
 app.use(cors());
 
-app.get('/', (req, res) => {
-    return res.send({
-        name: "shashank",
-        age: 21,
-        collage: "MNIT"
-    })
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//routes for user autentication
+import userRoutes from "./routes/user.route.js";
+app.use("/api/v1/user", userRoutes);
 
 export { app };
