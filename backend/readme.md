@@ -143,7 +143,6 @@ The endpoint expects a JSON object with the following structure:
 - The JWT token is sent as an HTTP-only cookie named `token` for security.
 - Ensure that HTTPS is used in production when `NODE_ENV` is set to "production" to secure cookie transmission.# API Documentation
 
-## POST /api/v1/users/login
 
 This endpoint authenticates an existing user.
 
@@ -203,6 +202,45 @@ The endpoint expects a JSON object with the following structure:
   "token": "jwt.token.here"
 }
 ```
+
+## GET /api/v1/users/logout
+
+This endpoint logs out an authenticated user.
+
+### Description
+
+Logs out the current user by clearing the JWT token cookie and blacklisting the token to prevent its further usage. The token is expected either in an HTTP-only cookie or in the `Authorization` header.
+
+### Request Details
+
+- **Method:** GET  
+- **Authentication:** Required (the token must be provided either as an HTTP-only cookie named `token` or as a Bearer token in the `Authorization` header).
+- **Request Body:** None
+
+### Response Codes
+
+- **200 OK**  
+  Logout successful.  
+  Response includes a confirmation message.
+- **401 Unauthorized**  
+  If the token is missing, invalid, or already blacklisted.
+- **500 Internal Server Error**  
+  An error occurred on the server.
+
+### Example Response
+
+```json
+{
+  "message": "Logout successful"
+}
+```
+
+### Notes
+
+- The endpoint first clears the HTTP-only cookie `token` from the client.
+- After clearing the cookie, the token is stored in a blacklist to prevent its reuse.
+- Use HTTPS in production to ensure secure token transmission.
+
 
 ## POST /api/v1/captians/register
 
