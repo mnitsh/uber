@@ -15,4 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 import userRoutes from "./routes/user.route.js";
 app.use("/api/v1/users", userRoutes);
 
+//routes for captain autentication
+import captianRoutes from "./routes/captian.route.js";
+app.use("/api/v1/captians", captianRoutes);
+
 export { app };

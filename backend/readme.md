@@ -203,3 +203,99 @@ The endpoint expects a JSON object with the following structure:
   "token": "jwt.token.here"
 }
 ```
+
+## POST /api/v1/captians/register
+
+This endpoint registers a new captain in the system.
+
+### Description
+
+Registers a new captain with the required personal details, credentials, and vehicle information.  
+If validation passes and a captain with the same email does not already exist, a new captain is created.  
+A JWT token is generated and returned along with the captain's details.
+
+### Request Body
+
+The endpoint expects a JSON object with the following structure:
+
+```json
+{
+  "fullName": {
+    "firstName": "John",         // required, at least 2 characters
+    "lastName": "Doe"            // optional but if provided, at least 2 characters
+  },
+  "email": "john.doe@example.com",  // required, must be in a valid email format
+  "password": "password123",        // required, at least 6 characters long
+  "vehicle": {
+    "color": "red",                 // required, vehicle color
+    "plate": "ABC123",              // required, unique, minimum length of 4 characters
+    "capacity": 4,                  // required, minimum value of 1
+    "vehicleType": "car"            // required; valid values: "car", "bike", "auto"
+  }
+}
+```
+
+### Validation Rules
+
+- **fullName.firstName**:
+  - Must not be empty.
+  - Minimum length of 2 characters.
+- **email**:
+  - Required.
+  - Must be in a valid email format.
+- **password**:
+  - Required.
+  - Minimum length of 6 characters.
+- **vehicle.color**:
+  - Required.
+- **vehicle.plate**:
+  - Required.
+  - Must be unique.
+  - Minimum length of 4 characters.
+- **vehicle.capacity**:
+  - Required.
+  - Must be a number with a minimum value of 1.
+- **vehicle.vehicleType**:
+  - Required.
+  - Must be one of: "car", "bike", or "auto".
+
+### Response Codes
+
+- **201 Created**  
+  Captain registered successfully.  
+  Response includes the captain details and a JWT token.
+- **400 Bad Request**  
+  Validation failed (e.g., missing or invalid fields) or the captain already exists.
+- **500 Internal Server Error**  
+  An error occurred on the server.
+
+### Example Response
+
+```json
+{
+  "message": "Captian registered successfully",
+  "captian": {
+    "_id": "60c72b2f3f1b2c001c8f9a2e",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "createdAt": "2025-05-29T12:34:56.789Z",
+    "updatedAt": "2025-05-29T12:34:56.789Z"
+  },
+  "token": "jwt.token.here"
+}
+```
+
+### Notes
+
+- A JWT token is generated and should be used to authorize subsequent requests.
+- Ensure that your environment variables such as `TOKEN_SECRET` and `TOKEN_EXPIRY` are correctly set in the `.env` file.
+- Use HTTPS in production to securely transmit data.

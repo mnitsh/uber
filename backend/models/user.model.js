@@ -7,11 +7,15 @@ const userSchema = new Schema(
         fullName: {
             firstName: {
                 type: String,
+                lowercase: true,
+                trim: true,
                 required: [true, "FirstName is required"],
                 minlength: [2, "FirstName must be at least 2 character long"]
             },
             lastName: {
                 type: String,
+                lowercase: true,
+                trim: true,
                 minlength: [3, "FirstName must be at least 3 character long"]
             }
         },
@@ -19,6 +23,9 @@ const userSchema = new Schema(
             type: String,
             required: [true, "email is required"],
             unique: true,
+            trim: true,
+            lowercase: true,
+            match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address']
         },
         password: {
             type: String,
