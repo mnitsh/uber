@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { body } from "express-validator"
-import { registerCaptian } from "../controllers/captian.Controller.js";
+import { registerCaptian, captianLogin, getCaptianProfile, logoutCaptian } from "../controllers/captian.Controller.js";
+import { verifyCaptianJWT } from "../middlewares/auth.middleware.js";
+import { get } from "mongoose";
+
 const router = Router();
 
 router.post('/register', [
@@ -41,6 +44,22 @@ router.post('/register', [
         .isIn(['car', 'bike', 'auto'])
         .withMessage('Vehicle type must be either car, bike or auto'),
 ], registerCaptian);
+
+router.post('/login', [
+    body('email')
+        .trim()
+        .isEmail()
+        .withMessage('Invalid email format'),
+    body('password')
+        .isLength({ min: 6 })
+        .trim()
+        .notEmpty()
+        .withMessage('Password is required'),
+], captianLogin);
+
+router.get('/profile', verifyCaptianJWT, getCaptianProfile);
+
+router.get('/logout', verifyCaptianJWT, logoutCaptian);
 
 export default router;
 

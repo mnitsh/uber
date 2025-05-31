@@ -337,3 +337,199 @@ The endpoint expects a JSON object with the following structure:
 - A JWT token is generated and should be used to authorize subsequent requests.
 - Ensure that your environment variables such as `TOKEN_SECRET` and `TOKEN_EXPIRY` are correctly set in the `.env` file.
 - Use HTTPS in production to securely transmit data.
+
+
+## POST /api/v1/captians/login
+
+This endpoint authenticates an existing captain.
+
+### Description
+
+Logs in a captain using the provided email and password credentials.  
+On successful authentication, a JWT token is generated, set as an HTTP-only cookie, and returned along with the captain's details.
+
+### Request Body
+
+The endpoint expects a JSON object with the following structure:
+
+```json
+{
+  "email": "john.doe@example.com", // required, must be in a valid email format
+  "password": "password123"          // required, at least 6 characters long
+}
+```
+
+### Validation Rules
+
+- **email**:
+  - Required.
+  - Must be in a valid email format.
+- **password**:
+  - Required.
+  - Minimum length of 6 characters.
+
+### Response Codes
+
+- **200 OK**  
+  Login successful.  
+  Response includes the captain details and the JWT token set as an HTTP-only cookie.
+- **400 Bad Request**  
+  Validation failed (e.g., missing or invalid email and/or password).
+- **404 Not Found**  
+  If no captain is found with the provided email.
+- **401 Unauthorized**  
+  If the provided password is incorrect.
+- **500 Internal Server Error**  
+  An error occurred on the server.
+
+### Example Response
+
+```json
+{
+  "message": "Captain logged in successfully",
+  "captian": {
+    "_id": "60c72b2f3f1b2c001c8f9a2e",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": "someSocketId",
+    "status": "inactive",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "createdAt": "2025-05-29T12:34:56.789Z",
+    "updatedAt": "2025-05-29T12:34:56.789Z"
+  },
+  "token": "jwt.token.here"
+}
+```
+
+### Notes
+
+- The JWT token is sent as an HTTP-only cookie named `token` for enhanced security.
+- Use HTTPS in production to ensure that the token is securely transmitted.
+
+
+## GET /api/v1/captians/profile
+
+This endpoint retrieves the authenticated captain's profile.
+
+### Description
+
+Fetches the profile details of the currently authenticated captain.  
+The request must include a valid JWT token either as an HTTP-only cookie (`token`) or as a Bearer token in the `Authorization` header.
+
+### Request Details
+
+- **Method:** GET  
+- **Authentication:** Required  
+- **Request Body:** None
+
+### Response Codes
+
+- **200 OK**  
+  Profile fetched successfully.  
+  Response includes the captain's profile details.
+- **401 Unauthorized**  
+  If the JWT token is missing, invalid, or the token is blacklisted.
+- **404 Not Found**  
+  If no captain is found with the given token.
+- **500 Internal Server Error**  
+  An error occurred on the server.
+
+### Example Response
+
+```json
+{
+  "message": "Captain profile fetched successfully",
+  "captian": {
+    "_id": "60c72b2f3f1b2c001c8f9a2e",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": "someSocketId",
+    "status": "inactive",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "createdAt": "2025-05-29T12:34:56.789Z",
+    "updatedAt": "2025-05-29T12:34:56.789Z"
+  }
+}
+```
+
+### Notes
+
+- The JWT token must be provided for authentication.
+- Use HTTPS in production to ensure secure transmission of the token.
+- Ensure that your environment variables (e.g., `TOKEN_SECRET`, `TOKEN_EXPIRY`) are properly configured.
+
+
+## GET /api/v1/captians/profile
+
+This endpoint retrieves the authenticated captain's profile.
+
+### Description
+
+Fetches the profile details of the currently authenticated captain.  
+The request must include a valid JWT token either as an HTTP-only cookie (`token`) or as a Bearer token in the `Authorization` header.
+
+### Request Details
+
+- **Method:** GET  
+- **Authentication:** Required  
+- **Request Body:** None
+
+### Response Codes
+
+- **200 OK**  
+  Profile fetched successfully.  
+  Response includes the captain's profile details.
+- **401 Unauthorized**  
+  If the JWT token is missing, invalid, or the token is blacklisted.
+- **404 Not Found**  
+  If no captain is found with the given token.
+- **500 Internal Server Error**  
+  An error occurred on the server.
+
+### Example Response
+
+```json
+{
+  "message": "Captain profile fetched successfully",
+  "captian": {
+    "_id": "60c72b2f3f1b2c001c8f9a2e",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": "someSocketId",
+    "status": "inactive",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "createdAt": "2025-05-29T12:34:56.789Z",
+    "updatedAt": "2025-05-29T12:34:56.789Z"
+  }
+}
+```
+
+### Notes
+
+- The JWT token must be provided for authentication.
+- Use HTTPS in production to ensure secure transmission of the token.
+- Ensure that your environment variables (e.g., `TOKEN_SECRET`, `TOKEN_EXPIRY`) are properly configured.
