@@ -475,14 +475,15 @@ The request must include a valid JWT token either as an HTTP-only cookie (`token
 - Ensure that your environment variables (e.g., `TOKEN_SECRET`, `TOKEN_EXPIRY`) are properly configured.
 
 
-## GET /api/v1/captians/profile
 
-This endpoint retrieves the authenticated captain's profile.
+## GET /api/v1/captians/logout
+
+This endpoint logs out an authenticated captain.
 
 ### Description
 
-Fetches the profile details of the currently authenticated captain.  
-The request must include a valid JWT token either as an HTTP-only cookie (`token`) or as a Bearer token in the `Authorization` header.
+Logs out the current captain by clearing the JWT token cookie and blacklisting the token to prevent its further usage.  
+The token must be provided either as an HTTP-only cookie named `token` or as a Bearer token in the `Authorization` header.
 
 ### Request Details
 
@@ -493,12 +494,9 @@ The request must include a valid JWT token either as an HTTP-only cookie (`token
 ### Response Codes
 
 - **200 OK**  
-  Profile fetched successfully.  
-  Response includes the captain's profile details.
+  Logout successful. Response includes a confirmation message.
 - **401 Unauthorized**  
-  If the JWT token is missing, invalid, or the token is blacklisted.
-- **404 Not Found**  
-  If no captain is found with the given token.
+  If the token is missing, invalid, or already blacklisted.
 - **500 Internal Server Error**  
   An error occurred on the server.
 
@@ -506,30 +504,12 @@ The request must include a valid JWT token either as an HTTP-only cookie (`token
 
 ```json
 {
-  "message": "Captain profile fetched successfully",
-  "captian": {
-    "_id": "60c72b2f3f1b2c001c8f9a2e",
-    "fullName": {
-      "firstName": "John",
-      "lastName": "Doe"
-    },
-    "email": "john.doe@example.com",
-    "socketId": "someSocketId",
-    "status": "inactive",
-    "vehicle": {
-      "color": "red",
-      "plate": "ABC123",
-      "capacity": 4,
-      "vehicleType": "car"
-    },
-    "createdAt": "2025-05-29T12:34:56.789Z",
-    "updatedAt": "2025-05-29T12:34:56.789Z"
-  }
+  "message": "Logout successful"
 }
 ```
 
 ### Notes
 
-- The JWT token must be provided for authentication.
+- The endpoint clears the HTTP-only cookie `token` from the client.
+- The token is added to a blacklist, preventing its reuse.
 - Use HTTPS in production to ensure secure transmission of the token.
-- Ensure that your environment variables (e.g., `TOKEN_SECRET`, `TOKEN_EXPIRY`) are properly configured.
