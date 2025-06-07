@@ -1,4 +1,5 @@
 import { Captian } from "../models/captian.model.js";
+import { ApiError } from "../utils/ApiError.js";
 
 export const createCaptian = async ({
     firstName,
@@ -11,7 +12,7 @@ export const createCaptian = async ({
     vehicleType
 }) => {
     if (!firstName || !email || !password || !color || !plate || !capacity || !vehicleType) {
-        throw new Error('All fields are required');
+        throw new ApiError(400, 'All fields are required');
     }
 
     const captian = await Captian.create({
@@ -20,7 +21,7 @@ export const createCaptian = async ({
             lastName
         },
         email,
-        password, 
+        password,
         vehicle: {
             color,
             plate,
@@ -29,5 +30,5 @@ export const createCaptian = async ({
         }
     });
 
-    return captian; 
+    return captian;
 }

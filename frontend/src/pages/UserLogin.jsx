@@ -1,24 +1,53 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
+import axiosInstance from "../lib/axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { userDataContext } from "../context/UserContext";
 
 function UserLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(userDataContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setUser({ email, password });
+    const user = {
+      email,
+      password,
+    };
+
+    try {
+      if (!email.trim()) {
+        toast.error("Email is required");
+        return;
+      }
+      if (!password.trim()) {
+        toast.error("Password is required");
+        return;
+      }
+      const response = await axiosInstance.post("/v1/users/login", user);
+      if (response.status === 200) {
+        setUser(response.data.data.user);
+        toast.success("User logged in successfully");
+        // Store token in localStorage or context if needed
+        localStorage.setItem("token", response.data.data.token);
+        navigate("/home");
+      } else if (response.status === 401) {
+        toast.error("Invalid email or password. Please try again.");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.";
+      toast.error(errorMessage);
+    }
     setEmail("");
     setPassword("");
   };
-
-  useEffect(() => {
-    if (user.email && user.password) {
-      console.log("User logged in:", user);
-    }
-  }, [user]);
 
   return (
     <div className="p-7 flex flex-col min-h-screen bg-gray-100 justify-between">

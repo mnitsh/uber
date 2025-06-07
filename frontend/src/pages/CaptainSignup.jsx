@@ -69,7 +69,7 @@ function CaptainSignup() {
             type="submit"
             className="bg-[#111] text-white rounded py-2 px-4 w-full text-lg font-semibold hover:bg-gray-800 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Login
+            Create account
           </button>
         </form>
         <p className="text-center text-sm text-gray-500 mt-1">

@@ -16,7 +16,6 @@ const userSchema = new Schema(
                 type: String,
                 lowercase: true,
                 trim: true,
-                minlength: [3, "FirstName must be at least 3 character long"]
             }
         },
         email: {

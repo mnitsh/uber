@@ -1,17 +1,51 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from "../lib/axios";
+import toast from "react-hot-toast";
+import { userDataContext } from "../context/UserContext";
 
 function UserSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(userDataContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setUser({ fullName: { firstName, lastName }, email, password });
+    const newUser = {
+      fullName: { firstName, lastName },
+      email,
+      password,
+    };
+
+    try {
+      if (!email.trim()) {
+        toast.error("Email is required");
+        return;
+      }
+      if (!password.trim()) {
+        toast.error("Password is required");
+        return;
+      }
+      if (!firstName.trim()) {
+        toast.error("First Name is required");
+        return;
+      }
+      const response = await axiosInstance.post("/v1/users/register", newUser);
+      if (response.status === 201) {
+        setUser(response.data.data.user);
+        toast.success("User created successfully");
+        navigate("/home");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "something went wrong. Please try again.";
+      toast.error(errorMessage);
+    }
     setEmail("");
     setPassword("");
     setFirstName("");
@@ -37,7 +71,6 @@ function UserSignup() {
               className="bg-[#eeeeee] rounded px-4 py-2 border w-1/2 text-base placeholder:text-sm"
               placeholder="First Name"
               autoFocus
-              required
             />
             <input
               type="text"
@@ -55,7 +88,6 @@ function UserSignup() {
             onChange={(e) => setEmail(e.target.value)}
             className="bg-[#eeeeee] rounded px-4 py-2 border w-full mb-6 text-base placeholder:text-sm"
             placeholder="email@example.com"
-            required
           />
           <h3 className="text-base font-medium mb-3">Enter Password</h3>
           <input
@@ -64,13 +96,12 @@ function UserSignup() {
             onChange={(e) => setPassword(e.target.value)}
             className="bg-[#eeeeee] rounded px-4 py-2 border w-full mb-6 text-base placeholder:text-sm"
             placeholder="password"
-            required
           />
           <button
             type="submit"
             className="bg-[#111] text-white rounded py-2 px-4 w-full text-lg font-semibold hover:bg-gray-800 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Login
+            Create account
           </button>
         </form>
         <p className="text-center text-sm text-gray-500 mt-1">
@@ -92,7 +123,6 @@ function UserSignup() {
           <Link to="/privacy" className="underline hover:text-blue-500">
             Privacy Policy
           </Link>
-
           .
         </p>
       </div>

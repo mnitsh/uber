@@ -1,4 +1,5 @@
 import { User } from '../models/user.model.js';
+import { ApiError } from '../utils/ApiError.js';
 
 export const createUser = async ({
     firstName,
@@ -8,7 +9,7 @@ export const createUser = async ({
 }) => {
 
     if (!firstName || !email || !password) {
-        throw new Error('All fields are required');
+        throw new ApiError(400, 'All fields are required');
     }
 
     const user = User.create({
