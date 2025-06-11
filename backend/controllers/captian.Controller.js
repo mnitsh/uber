@@ -45,6 +45,12 @@ const registerCaptian = asyncHandler(async (req, res) => {
 
     return res
         .status(201)
+        .cookie("captainToken", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+            sameSite: "strict", // Prevent CSRF attacks
+            maxAge: 24 * 60 * 60 * 1000  // 1 day in milliseconds
+        })
         .json(new ApiResponse(201, { captian, token }, "Captian registered successfully"));
 });
 
@@ -80,7 +86,7 @@ const captianLogin = asyncHandler(async (req, res) => {
 
 
     return res.status(200)
-        .cookie("token", token, {
+        .cookie("captainToken", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // Use secure cookies in production
             sameSite: "strict", // Prevent CSRF attacks
@@ -91,7 +97,7 @@ const captianLogin = asyncHandler(async (req, res) => {
 })
 
 const logoutCaptian = asyncHandler(async (req, res) => {
-    const token = req.cookies.token || req.headers?.authorization?.split(" ")[1];
+    const token = req.cookies.captainToken || req.headers?.authorization?.split(" ")[1];
     if (!token) {
         throw new ApiError(400, "No token provided");
     }
@@ -102,7 +108,7 @@ const logoutCaptian = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Failed to log out");
     }
 
-    res.clearCookie("token", {
+    res.clearCookie("captainToken", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Use secure cookies in production
         sameSite: "strict" // Prevent CSRF attacks
@@ -118,7 +124,7 @@ const getCaptianProfile = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Captain not found");
     }
 
-    return res.status(200).json(new ApiResponse(200, captian, "Captain profile retrieved successfully"));
+    return res.status(200).json(new ApiResponse(200, { captian }, "Captain profile retrieved successfully"));
 });
 
 

@@ -39,7 +39,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 export const verifyCaptianJWT = asyncHandler(async (req, res, next) => {
 
     const token =
-        req.cookies?.token ||
+        req.cookies?.captainToken ||
         req.headers?.authorization?.split(" ")[1];
 
     if (!token) {

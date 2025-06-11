@@ -30,6 +30,10 @@ function UserSignup() {
         toast.error("Password is required");
         return;
       }
+      if (password.length < 6) {
+        toast.error("Password must be greater than 6 character");
+        return;
+      }
       if (!firstName.trim()) {
         toast.error("First Name is required");
         return;
@@ -38,6 +42,12 @@ function UserSignup() {
       if (response.status === 201) {
         setUser(response.data.data.user);
         toast.success("User created successfully");
+        setUser(response.data.data.user);
+        localStorage.setItem("token", response.data.data.token);
+        setEmail("");
+        setPassword("");
+        setFirstName("");
+        setLastName("");
         navigate("/home");
       }
     } catch (error) {
@@ -46,10 +56,6 @@ function UserSignup() {
         "something went wrong. Please try again.";
       toast.error(errorMessage);
     }
-    setEmail("");
-    setPassword("");
-    setFirstName("");
-    setLastName("");
   };
 
   return (

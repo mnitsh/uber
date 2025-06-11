@@ -13,7 +13,6 @@ const captianSchema = new mongoose.Schema({
         lastName: {
             type: String,
             lowercase: true,
-            minlength: [2, 'Last name must be at least 2 characters long']
         }
     },
     email: {

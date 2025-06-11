@@ -44,6 +44,12 @@ const registerUser = asyncHandler(async (req, res) => {
 
     return res
         .status(201)
+        .cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+            sameSite: "strict", // Prevent CSRF attacks
+            maxAge: 24 * 60 * 60 * 1000  // 1 day in milliseconds
+        })
         .json(new ApiResponse(201, { user: userObj, token }, "User registered successfully"));
 });
 

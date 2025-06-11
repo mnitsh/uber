@@ -4,7 +4,9 @@ import UserLogin from "./pages/UserLogin";
 import UserSignup from "./pages/UserSignup";
 import CaptainLogin from "./pages/CaptainLogin";
 import CaptainSignup from "./pages/CaptainSignup";
+import CaptainHome from "./pages/CaptainHome";
 import { Routes, Route } from "react-router-dom";
+import CaptainProtectedWrapper from "./pages/CaptainProtectedWrapper";
 import Home from "./pages/Home";
 import { Toaster } from "react-hot-toast";
 
@@ -18,6 +20,14 @@ const App = () => {
         <Route path="/captain-login" element={<CaptainLogin />} />
         <Route path="/captain-signup" element={<CaptainSignup />} />
         <Route path="/home" element={<Home />} />
+        <Route
+          path="/captain-home"
+          element={
+            <CaptainProtectedWrapper>
+              <CaptainHome />
+            </CaptainProtectedWrapper>
+          }
+        />
       </Routes>
       <Toaster position="top-right" reverseOrder={false} />
     </>

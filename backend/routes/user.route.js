@@ -38,5 +38,6 @@ router.post('/login', [
 router.get('/profile', verifyJWT, getUserProfile);
 
 router.get('/logout', verifyJWT, logoutUser);
+
 export default router;
 

@@ -9,7 +9,7 @@ function UserLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { user, setUser } = useContext(userDataContext);
+  const { setUser } = useContext(userDataContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,10 +29,14 @@ function UserLogin() {
       }
       const response = await axiosInstance.post("/v1/users/login", user);
       if (response.status === 200) {
-        setUser(response.data.data.user);
+        setUser(response.data.data.captian);
+        console.log(response.data.data.captian);
+
         toast.success("User logged in successfully");
         // Store token in localStorage or context if needed
         localStorage.setItem("token", response.data.data.token);
+        setEmail("");
+        setPassword("");
         navigate("/home");
       } else if (response.status === 401) {
         toast.error("Invalid email or password. Please try again.");
@@ -45,8 +49,6 @@ function UserLogin() {
         "Something went wrong. Please try again.";
       toast.error(errorMessage);
     }
-    setEmail("");
-    setPassword("");
   };
 
   return (

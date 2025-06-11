@@ -1,24 +1,45 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import axiosInstance from "../lib/axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 function CaptainLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [captain, setCaptain] = useState({});
+  const navigate = useNavigate();
+  const { setCaptain } = useContext(CaptainDataContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setCaptain({ email, password });
-    setEmail("");
-    setPassword("");
-  };
-
-  useEffect(() => {
-    if (captain.email && captain.password) {
-      console.log("Captain logged in:", captain);
+    const captain = {
+      email,
+      password,
+    };
+    try {
+      const response = await axiosInstance.post("/v1/captians/login", captain);
+      if (response.status === 200) {
+        toast.success("Captian logged in successfully");
+        setCaptain(response.data.data.captian);
+        localStorage.setItem("captainToken", response.data.data.token);
+        setEmail("");
+        setPassword("");
+        navigate("/captain-home");
+      } else if (response.status === 401) {
+        toast.error("Invalid email or password. Please try again.");
+      } else {
+        toast.error("Login failed. Please try again.");
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.";
+      toast.error(errorMessage);
+      return;
     }
-  }, [captain]);
+  };
 
   return (
     <div className="p-7 flex flex-col min-h-screen bg-gray-100 justify-between">
