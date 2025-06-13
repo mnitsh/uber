@@ -19,6 +19,14 @@ function CaptainLogin() {
       password,
     };
     try {
+      if (!email) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+      if (!password) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
       const response = await axiosInstance.post("/v1/captians/login", captain);
       if (response.status === 200) {
         toast.success("Captian logged in successfully");
